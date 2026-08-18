@@ -1,0 +1,7 @@
+{
+  "name": "SAVIOR — Rwanda AI Cybersecurity Platform",
+  "description": "AI-powered defensive cybersecurity and cybercrime protection platform for Rwanda, featuring biometric authentication, real-time threat analysis, secure vault, and simulated financial security.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
