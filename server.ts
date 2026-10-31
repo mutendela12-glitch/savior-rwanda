@@ -3,7 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
 import { saviorState } from './server/state';
-import { analyzeScamMessageWithAI, analyzeUrlWithAI, askSaviorAIAdvisor } from './server/gemini';
+import { analyzeScamMessageWithAI, analyzeUrlWithAI, askSaviorAIAdvisor, verifyFaceBiometricWithAI } from './server/gemini';
 
 dotenv.config();
 
@@ -25,6 +25,57 @@ app.get('/api/health', (req, res) => {
     geminiConfigured: Boolean(process.env.GEMINI_API_KEY),
     simulatedMode: true,
   });
+});
+
+// ==================== AUTHENTICATION & EMAIL VERIFICATION ====================
+
+app.post('/api/auth/send-code', (req, res) => {
+  try {
+    const { email, type, fullName, phone, nationalId, district, role } = req.body;
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+    const result = saviorState.requestEmailVerificationCode(email, type || 'SIGNIN', {
+      fullName,
+      phone,
+      nationalId,
+      district,
+      role,
+    });
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Failed to dispatch verification code' });
+  }
+});
+
+app.post('/api/auth/verify-code', (req, res) => {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) {
+      return res.status(400).json({ error: 'Email and verification code are required' });
+    }
+    const result = saviorState.verifyEmailCode(email, code);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Verification process failed' });
+  }
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  const result = saviorState.logoutSession(token);
+  res.json(result);
+});
+
+app.get('/api/auth/session', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token || !saviorState.validateSessionToken(token)) {
+    return res.status(401).json({ authenticated: false });
+  }
+  res.json({ authenticated: true, user: saviorState.getUser() });
 });
 
 // 2. User & Roles
@@ -88,21 +139,54 @@ app.post('/api/biometrics/consent', (req, res) => {
   res.json(profile);
 });
 
-app.post('/api/biometrics/enroll', (req, res) => {
+app.post('/api/biometrics/enroll', async (req, res) => {
   try {
-    const { faceVectorData } = req.body;
-    const profile = saviorState.enrollBiometrics(faceVectorData || 'vec_default_128_geom');
-    res.json({ success: true, profile });
+    const { faceVectorData, imageBase64 } = req.body;
+    let aiVerification = null;
+    if (imageBase64) {
+      aiVerification = await verifyFaceBiometricWithAI(imageBase64);
+      if (aiVerification && !aiVerification.isHumanFace) {
+        return res.status(400).json({
+          success: false,
+          error: aiVerification.details || 'No human face detected in the camera frame. Please align your face inside the circle and ensure good lighting.',
+          aiVerification,
+        });
+      }
+    }
+    const profile = saviorState.enrollBiometrics(faceVectorData || 'vec_128_geom_live_' + Date.now());
+    res.json({ success: true, profile, aiVerification });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
 });
 
-app.post('/api/biometrics/verify', (req, res) => {
+app.post('/api/biometrics/verify', async (req, res) => {
   try {
-    const { success } = req.body;
+    const { success, imageBase64, faceDetected } = req.body;
+    let aiVerification = null;
+    if (imageBase64) {
+      aiVerification = await verifyFaceBiometricWithAI(imageBase64);
+      if (aiVerification && !aiVerification.isHumanFace) {
+        const failureResult = saviorState.verifyBiometricFace(false);
+        return res.status(400).json({
+          verified: false,
+          error: aiVerification.details || 'No human face detected in camera capture. Please face the camera and try again.',
+          attemptsRemaining: failureResult.attemptsRemaining,
+          locked: failureResult.locked,
+          aiVerification,
+        });
+      }
+    } else if (faceDetected === false) {
+      const failureResult = saviorState.verifyBiometricFace(false);
+      return res.status(400).json({
+        verified: false,
+        error: 'No human face was detected in front of the camera.',
+        attemptsRemaining: failureResult.attemptsRemaining,
+        locked: failureResult.locked,
+      });
+    }
     const result = saviorState.verifyBiometricFace(Boolean(success));
-    res.json(result);
+    res.json({ ...result, aiVerification });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
@@ -195,19 +279,42 @@ app.get('/api/reports/track/:trackingId', (req, res) => {
 
 app.post('/api/reports/submit', (req, res) => {
   try {
-    const { category, title, description, suspectContact, financialLossAmount, evidenceFileName, evidenceFileContent, priority } = req.body;
+    const { 
+      category, 
+      title, 
+      description, 
+      theftType,
+      moneyDetails,
+      informationDetails,
+      suspectDetails,
+      immediateActionsRequested,
+      suspectContact, 
+      financialLossAmount, 
+      evidenceFileName, 
+      evidenceFileContent, 
+      priority,
+      incidentLocation 
+    } = req.body;
+
     if (!category || !title || !description) {
       return res.status(400).json({ error: 'Please provide category, title, and description' });
     }
+
     const report = saviorState.submitReport({
       category,
       title,
       description,
-      suspectContact,
-      financialLossAmount: Number(financialLossAmount) || 0,
+      theftType,
+      moneyDetails,
+      informationDetails,
+      suspectDetails,
+      immediateActionsRequested,
+      suspectContact: suspectDetails?.phoneOrWhatsApp || suspectContact,
+      financialLossAmount: Number(moneyDetails?.amountRwf || financialLossAmount) || 0,
       evidenceFileName,
       evidenceFileContent,
       priority,
+      incidentLocation,
     });
     res.json(report);
   } catch (err: any) {
@@ -228,6 +335,37 @@ app.patch('/api/reports/:id/status', (req, res) => {
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
+});
+
+app.post('/api/reports/:id/fast-action', (req, res) => {
+  try {
+    const { actionType, officerName, notes } = req.body;
+    if (!actionType) {
+      return res.status(400).json({ error: 'Please specify actionType' });
+    }
+    const updated = saviorState.executeFastAction(
+      req.params.id,
+      actionType,
+      officerName || 'Duty Officer',
+      notes
+    );
+    res.json(updated);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/reports/:id/gps-track', (req, res) => {
+  try {
+    const telemetry = saviorState.getSuspectGpsPing(req.params.id);
+    res.json(telemetry);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/police/stats', (req, res) => {
+  res.json(saviorState.getPoliceStats());
 });
 
 // 8. AI Threat Scanner (Messages & URLs)

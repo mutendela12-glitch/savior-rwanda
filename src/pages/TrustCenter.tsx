@@ -77,7 +77,7 @@ export const TrustCenter: React.FC<TrustCenterProps> = ({
           <div className="lg:col-span-7 space-y-4">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-1 rounded bg-cyan-950/90 border border-cyan-500/50 text-cyan-300 text-[11px] font-mono font-bold tracking-wider uppercase">
-                RWANDA CYBER DEFENSE INITIATIVE
+                {t.trustHeroBadge}
               </span>
               <span className="text-xs text-slate-400 font-mono hidden sm:inline">
                 STATUS: {user?.isAccountLocked ? 'EMERGENCY LOCK' : 'ACTIVE DEFENSE'}
@@ -85,15 +85,11 @@ export const TrustCenter: React.FC<TrustCenterProps> = ({
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
-              {language === 'rw' 
-                ? 'Icyicaro cy’Umutekano wawe n’Ubwirinzi bw’Amafaranga' 
-                : 'Defensive Cyber Resilience & Identity Shield'}
+              {t.trustHeroTitle}
             </h1>
 
             <p className="text-sm text-slate-300 max-w-xl leading-relaxed">
-              {language === 'rw'
-                ? 'SAVIOR ikurinda ubutekamutwe bwa MoMo, imiyoboro yiba amabanga, n’ibitero by’ikoranabuhanga binyuze mu gupima isura no kugenzura ihererekanya.'
-                : 'Shielding Rwandan citizens and enterprises against mobile money fraud, phishing, credential harvesting, and unauthorized transactions with multi-tier biometric defense.'}
+              {t.trustHeroDesc}
             </p>
 
             {/* Tactical Buttons */}
@@ -170,6 +166,49 @@ export const TrustCenter: React.FC<TrustCenterProps> = ({
             <p className="text-xs font-mono text-cyan-300/80 mt-2 text-center">
               SAVIOR TRUST INDEX: <span className="text-white font-bold">{score >= 80 ? 'RESILIENT' : 'ATTENTION REQUIRED'}</span>
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Prominent Citizen Emergency Case Reporting Banner */}
+      <div className="bg-gradient-to-r from-[#170a0a] via-[#1f1010] to-[#0f172a] border border-rose-600/70 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="w-12 h-12 rounded-xl bg-rose-950/90 border border-rose-500/80 flex items-center justify-center text-rose-400 shrink-0 shadow-lg">
+              <ShieldAlert className="w-6 h-6 animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-700 text-[10px] font-mono font-bold uppercase animate-pulse">
+                  {t.reportIntakeBadge}
+                </span>
+                <span className="text-xs font-mono text-amber-300 hidden sm:inline">
+                  Direct Police & RIB Transmission
+                </span>
+              </div>
+              <h2 className="text-base sm:text-lg font-bold text-white">
+                {t.reportIntakeTitle}
+              </h2>
+              <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                {t.reportIntakeSubtitle}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap sm:flex-col items-stretch gap-2 shrink-0">
+            <button
+              onClick={onOpenReport}
+              className="px-5 py-2.5 bg-gradient-to-r from-rose-600 via-orange-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-lg shadow-rose-950 flex items-center justify-center gap-2"
+            >
+              <FileText className="w-4 h-4" />
+              <span>{t.reportTabNew}</span>
+            </button>
+            <button
+              onClick={onOpenReport}
+              className="px-4 py-2 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-cyan-300 rounded-xl text-xs font-mono font-medium transition text-center"
+            >
+              {t.reportTabTrack}
+            </button>
           </div>
         </div>
       </div>

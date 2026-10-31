@@ -12,6 +12,8 @@ import { CybercrimeReporting } from './pages/CybercrimeReporting';
 import { OfficialCommandPortal } from './pages/OfficialCommandPortal';
 import { AdminSOC } from './pages/AdminSOC';
 import { SaviorAIChat } from './pages/SaviorAIChat';
+import { AuthScreen } from './components/AuthScreen';
+import cyberBg from './assets/images/cyber_defense_bg.jpg';
 import { 
   UserProfile, 
   SecurityScoreBreakdown, 
@@ -27,10 +29,23 @@ import { ShieldAlert, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<string>('trust-center');
+  const [portalMode, setPortalMode] = useState<'CITIZEN' | 'POLICE_RIB'>('CITIZEN');
   const [language, setLanguage] = useState<LanguageCode>('rw'); // Default to Kinyarwanda as requested for Rwanda users
 
+  // Authentication gate state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return Boolean(localStorage.getItem('savior_auth_token'));
+  });
+
   // Core system state
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    try {
+      const saved = localStorage.getItem('savior_auth_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [securityScore, setSecurityScore] = useState<SecurityScoreBreakdown | null>(null);
   const [biometricProfile, setBiometricProfile] = useState<BiometricProfile | null>(null);
   const [financialConnections, setFinancialConnections] = useState<FinancialConnection[]>([]);
@@ -135,10 +150,50 @@ export function App() {
     setCurrentTab('report');
   };
 
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('savior_auth_token');
+      if (token) {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      }
+    } catch (e) {
+      console.warn('Logout API call error:', e);
+    } finally {
+      localStorage.removeItem('savior_auth_token');
+      localStorage.removeItem('savior_auth_user');
+      setIsAuthenticated(false);
+    }
+  };
+
+  // If user is not authenticated, show the AuthScreen gateway with email 2FA verification
+  if (!isAuthenticated) {
+    return (
+      <AuthScreen
+        onLoginSuccess={(authedUser) => {
+          setUser(authedUser);
+          setIsAuthenticated(true);
+          fetchAppData();
+        }}
+        language={language}
+        setLanguage={setLanguage}
+      />
+    );
+  }
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#060b17] text-white flex flex-col items-center justify-center space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-cyan-950 border border-cyan-500/60 flex items-center justify-center text-cyan-400">
+      <div 
+        className="min-h-screen text-white flex flex-col items-center justify-center space-y-4"
+        style={{
+          backgroundImage: `linear-gradient(to bottom, rgba(6, 11, 23, 0.92), rgba(4, 8, 16, 0.96)), url(${cyberBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="w-14 h-14 rounded-2xl bg-cyan-950/80 border border-cyan-500/60 flex items-center justify-center text-cyan-400 shadow-xl shadow-cyan-950">
           <RefreshCw className="w-8 h-8 animate-spin" />
         </div>
         <div className="text-center space-y-1 font-mono">
@@ -150,11 +205,39 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#060b17] text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
+    <div 
+      className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black relative"
+      style={{
+        backgroundImage: `linear-gradient(to bottom, rgba(6, 11, 23, 0.90), rgba(4, 8, 16, 0.95)), url(${cyberBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
+      {/* Subtle Tactical Cyber Grid Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d405_1px,transparent_1px),linear-gradient(to_bottom,#06b6d405_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+
       {/* Top Navbar */}
       <Navbar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
+        portalMode={portalMode}
+        setPortalMode={(mode) => {
+          setPortalMode(mode);
+          if (mode === 'POLICE_RIB') {
+            setCurrentTab('official');
+            if (user?.role === 'CITIZEN') {
+              handleRoleChange('INVESTIGATOR');
+            }
+          } else {
+            if (currentTab === 'official' || currentTab === 'admin') {
+              setCurrentTab('trust-center');
+            }
+            if (user?.role !== 'CITIZEN') {
+              handleRoleChange('CITIZEN');
+            }
+          }
+        }}
         user={user}
         securityScore={securityScore}
         language={language}
@@ -162,6 +245,7 @@ export function App() {
         onOpenEmergencyLock={() => setIsEmergencyLockOpen(true)}
         onOpenRecovery={() => setIsRecoveryOpen(true)}
         onChangeRole={handleRoleChange}
+        onLogout={handleLogout}
       />
 
       {/* Account Locked Red Alert Banner */}
@@ -238,6 +322,10 @@ export function App() {
             language={language}
             initialDetails={prefilledReportDetails}
             onRefreshData={fetchAppData}
+            onSwitchToOfficialPortal={() => {
+              setPortalMode('POLICE_RIB');
+              setCurrentTab('official');
+            }}
           />
         )}
 

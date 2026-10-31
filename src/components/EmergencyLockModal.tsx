@@ -58,12 +58,10 @@ export const EmergencyLockModal: React.FC<EmergencyLockModalProps> = ({
               <Lock className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-bold text-rose-200">
-              {language === 'rw' ? 'Konti Yafunzwe Byihutirwa!' : 'Emergency Lock Activated!'}
+              {t.emergencyLockedBanner}
             </h3>
             <p className="text-sm text-slate-300 max-w-sm mx-auto">
-              {language === 'rw' 
-                ? 'Ibikoresho byose byahagaritswe kandi ihererekanya ryose ry’amafaranga ryahagaritswe.' 
-                : 'All active sessions have been revoked and all financial transactions have been frozen.'}
+              {t.emergencyLockedDesc}
             </p>
           </div>
         ) : (
@@ -75,13 +73,13 @@ export const EmergencyLockModal: React.FC<EmergencyLockModalProps> = ({
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <span>{t.btnEmergencyLock}</span>
+                  <span>{t.emergencyTitle}</span>
                   <span className="text-[10px] bg-rose-900/60 border border-rose-500/60 text-rose-300 px-2 py-0.5 rounded font-mono uppercase">
                     Level 1 Freeze
                   </span>
                 </h3>
                 <p className="text-xs text-rose-300/80 font-mono">
-                  SAVIOR HIGH-PROTECTION PROTOCOL
+                  {t.emergencySubtitle}
                 </p>
               </div>
             </div>
@@ -103,7 +101,7 @@ export const EmergencyLockModal: React.FC<EmergencyLockModalProps> = ({
             {/* Reason selector */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-300">
-                Select Reason for Lockdown:
+                {t.emergencyReason}:
               </label>
               <select
                 value={reason}
@@ -111,16 +109,16 @@ export const EmergencyLockModal: React.FC<EmergencyLockModalProps> = ({
                 className="w-full bg-[#070d18] border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-rose-500"
               >
                 <option value="Suspected unauthorized access or active phone/SIM threat">
-                  Suspected unauthorized access or phone theft
+                  {t.emergencyReasonSuspectedHack}
                 </option>
                 <option value="Compromised MoMo PIN or unsolicited OTP request">
-                  Compromised MoMo PIN or fraudulent verification codes
+                  {t.emergencyReasonStolenPhone}
                 </option>
                 <option value="Targeted phishing campaign or extortion threat">
-                  Targeted phishing campaign or impersonation scam
+                  Targeted phishing campaign or extortion threat
                 </option>
                 <option value="Precautionary high-security lockdown">
-                  Precautionary high-security user lockdown
+                  Precautionary high-security lockdown
                 </option>
               </select>
             </div>
@@ -133,7 +131,7 @@ export const EmergencyLockModal: React.FC<EmergencyLockModalProps> = ({
                 disabled={isProcessing}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition"
               >
-                Cancel
+                {t.btnCancel}
               </button>
               <button
                 type="button"
@@ -149,7 +147,7 @@ export const EmergencyLockModal: React.FC<EmergencyLockModalProps> = ({
                 ) : (
                   <>
                     <AlertOctagon className="w-4 h-4" />
-                    <span>Confirm Emergency Lock</span>
+                    <span>{t.emergencyConfirmBtn}</span>
                   </>
                 )}
               </button>

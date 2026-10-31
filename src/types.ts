@@ -116,6 +116,29 @@ export interface CybercrimeReport {
     | 'MALICIOUS_APP';
   title: string;
   description: string;
+  theftType?: 'MONEY' | 'INFORMATION' | 'BOTH';
+  moneyDetails?: {
+    amountRwf: number;
+    paymentChannel: 'MTN_MOMO' | 'AIRTEL_MONEY' | 'BANK_TRANSFER' | 'AGENT_KIOSK' | 'OTHER';
+    providerName?: string;
+    transactionReference?: string;
+    deceptionMethod: string;
+    recipientAccountOrPhone?: string;
+  };
+  informationDetails?: {
+    compromisedItems: string[];
+    theftMethod: string;
+    isOngoingImpersonation: boolean;
+    extortionOrBlackmail: boolean;
+    contactsAtRiskNotes?: string;
+  };
+  suspectDetails?: {
+    aliasOrName?: string;
+    phoneOrWhatsApp?: string;
+    platformUsed?: string;
+    languageUsed?: string;
+  };
+  immediateActionsRequested?: string[];
   suspectContact?: string;
   financialLossAmount?: number;
   evidenceFiles: Array<{
@@ -124,6 +147,45 @@ export interface CybercrimeReport {
     sha256Hash: string;
     uploadedAt: string;
     digitalSealSignature: string;
+  }>;
+  suspectLocation?: {
+    lat: number;
+    lng: number;
+    district: string;
+    sector: string;
+    cellTower: string;
+    ipAddress: string;
+    isp: string;
+    accuracyMeters: number;
+    signalStrengthDbm: number;
+    lastActiveTime: string;
+    isLivePinging: boolean;
+    deviceModel?: string;
+    approximateAddress?: string;
+    trackingMethod: 'TELECOM_CELL_TRIANGULATION' | 'GEO_IP_TRACE' | 'WEB_SESSION_GPS' | 'MOMO_AGENT_CASH_POINT';
+  };
+  incidentLocation?: {
+    lat: number;
+    lng: number;
+    district: string;
+    sector?: string;
+    address?: string;
+  };
+  assignedPatrolUnit?: {
+    unitId: string;
+    officerCallsign: string;
+    currentLat: number;
+    currentLng: number;
+    etaMinutes: number;
+    status: 'STANDBY' | 'EN_ROUTE' | 'ON_SCENE' | 'INTERCEPTED';
+    vehicleType: 'PATROL_CRUISER' | 'RAPID_MOTORCYCLE' | 'TACTICAL_VAN';
+  };
+  fastActionsTaken?: Array<{
+    actionType: 'FREEZE_MOMO' | 'FREEZE_BANK' | 'IMSI_LOCK' | 'DISPATCH_PATROL' | 'EXPEDITE_WARRANT' | 'RESOLVED_RAPID';
+    timestamp: string;
+    officer: string;
+    details: string;
+    referenceTicket: string;
   }>;
   status: 'RECEIVED' | 'UNDER_REVIEW' | 'ESCALATED_RIB' | 'ESCALATED_RNP' | 'RESOLVED' | 'DISMISSED';
   priority: 'ROUTINE' | 'URGENT' | 'EMERGENCY';

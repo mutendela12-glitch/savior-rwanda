@@ -66,10 +66,10 @@ export const AccountRecoveryModal: React.FC<AccountRecoveryModalProps> = ({
           </div>
           <div>
             <h3 className="text-base font-bold text-white">
-              {t.btnStartRecovery}
+              {t.recoveryTitle}
             </h3>
             <p className="text-xs text-cyan-300/80 font-mono">
-              Identity Verification & Shield Restore
+              {t.recoverySubtitle}
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@ export const AccountRecoveryModal: React.FC<AccountRecoveryModalProps> = ({
             <div className="space-y-1.5">
               <label className="text-xs font-mono text-cyan-300 flex items-center gap-1">
                 <KeyRound className="w-3.5 h-3.5" />
-                <span>Emergency Backup Recovery Code:</span>
+                <span>{t.recoveryCodeLabel}:</span>
               </label>
               <input
                 type="text"

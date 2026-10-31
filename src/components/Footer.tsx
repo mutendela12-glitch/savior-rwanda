@@ -25,7 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
               </span>
             </div>
             <p className="text-xs text-slate-400 max-w-md leading-relaxed">
-              AI-Powered Defensive Cybersecurity & Cybercrime Protection Platform for Rwanda. Built to defend citizens, businesses, and mobile money ecosystems with biometric authentication and cryptographic incident intelligence.
+              {t.footerDesc}
             </p>
             <div className="p-2.5 bg-[#0b1324] border border-amber-900/50 rounded-lg text-[11px] text-amber-300/90 font-mono">
               ⚠️ {t.simulatedNotice}
@@ -56,11 +56,11 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
           {/* Col 3: Compliance & Standards */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-300 font-mono">
-              Legal Compliance
+              {t.footerLegalTitle}
             </h4>
             <ul className="space-y-1.5 text-xs text-slate-400">
-              <li>• Law Nº 60/2018 (Cybercrime Prevention)</li>
-              <li>• Law Nº 058/2021 (Personal Data Protection)</li>
+              <li>{t.footerLaw1}</li>
+              <li>{t.footerLaw2}</li>
               <li>• AES-256 Vector Biometric Vault Standard</li>
               <li>• SHA-256 Digital Chain of Custody</li>
             </ul>
