@@ -96,15 +96,15 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
         {/* Left: Transaction Initiator */}
         <div className="lg:col-span-7 bg-[#0b1324] border border-slate-800 rounded-2xl p-6 space-y-5">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h3 className="text-base font-bold text-white">Initiate Simulated Payment / Transfer</h3>
-            <span className="text-[10px] font-mono text-cyan-400">3-Stage Strong Auth Required</span>
+            <h3 className="text-base font-bold text-white">{t.simInitiateTitle}</h3>
+            <span className="text-[10px] font-mono text-cyan-400">{t.sim3StageRequired}</span>
           </div>
 
           <form onSubmit={handleCreateTransaction} className="space-y-4">
             {/* Provider Selection */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-300">
-                Select Connected Provider:
+                {t.simSelectProvider}
               </label>
               <select
                 value={selectedConnectionId}
@@ -122,7 +122,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
             {/* Recipient details */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">Recipient Name:</label>
+                <label className="text-xs font-medium text-slate-300">{t.simRecipientName}</label>
                 <input
                   type="text"
                   value={recipientName}
@@ -133,7 +133,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">Recipient Phone / Account:</label>
+                <label className="text-xs font-medium text-slate-300">{t.simRecipientPhone}</label>
                 <input
                   type="text"
                   value={recipientPhone}
@@ -147,7 +147,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
             {/* Amount & Type */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">Amount (RWF):</label>
+                <label className="text-xs font-medium text-slate-300">{t.simAmountLabel}</label>
                 <input
                   type="number"
                   min={1000}
@@ -160,7 +160,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">Transaction Type:</label>
+                <label className="text-xs font-medium text-slate-300">{t.simTxType}</label>
                 <select
                   value={txType}
                   onChange={(e) => setTxType(e.target.value as any)}
@@ -176,11 +176,11 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
 
             {/* Fraud Risk Indicator preview */}
             <div className="p-3.5 bg-slate-900/60 border border-slate-800 rounded-xl text-xs space-y-1">
-              <span className="text-[10px] font-mono text-slate-400 block">SAVIOR RISK PRE-ANALYSIS:</span>
+              <span className="text-[10px] font-mono text-slate-400 block">{t.simRiskAnalysis}</span>
               <p className="text-slate-300">
                 {amount >= 200000 
-                  ? '⚠️ High-Value threshold triggered (>200k RWF). Requires full biometric face scan + password + MFA.'
-                  : 'Standard threshold. Protected by SAVIOR dual verification shield.'}
+                  ? t.simRiskThresholdTriggered
+                  : t.simRiskStandard}
               </p>
             </div>
 
@@ -204,12 +204,12 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
               {isCreating ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Submitting Intent...</span>
+                  <span>{t.simBtnSubmitting}</span>
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>Submit Simulated Transaction For Authorization</span>
+                  <span>{t.simBtnSubmit}</span>
                 </>
               )}
             </button>
@@ -220,7 +220,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
         <div className="lg:col-span-5 space-y-5">
           {/* Provider Balances */}
           <div className="bg-[#0b1324] border border-slate-800 rounded-2xl p-5 space-y-3">
-            <h3 className="text-sm font-bold text-white">Simulated Account Wallets</h3>
+            <h3 className="text-sm font-bold text-white">{t.simWalletsTitle}</h3>
             <div className="space-y-2.5">
               {connections.map((c) => (
                 <div key={c.id} className="p-3 bg-[#070d18] border border-slate-800 rounded-xl flex items-center justify-between text-xs font-mono">
@@ -239,7 +239,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
           {/* Pending Authorizations List */}
           <div className="bg-[#0b1324] border border-slate-800 rounded-2xl p-5 space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-white">Pending Approval Queue</h3>
+              <h3 className="text-sm font-bold text-white">{t.simQueueTitle}</h3>
               <span className="text-[10px] font-mono text-cyan-300">
                 {transactions.filter(t => t.status === 'PENDING').length} Pending
               </span>
@@ -258,7 +258,7 @@ export const FinancialSimulator: React.FC<FinancialSimulatorProps> = ({
                       onClick={() => setSelectedTxForAuth(tx)}
                       className="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-bold uppercase tracking-wider transition"
                     >
-                      Authorize Now
+                      {t.simBtnAuthNow}
                     </button>
                   </div>
                 </div>

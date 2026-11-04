@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { UserProfile, SecurityScoreBreakdown, SecurityAlert, LanguageCode } from '../types';
 import { translations } from '../translations';
+import { CyberThreatMap } from '../components/CyberThreatMap';
 
 interface TrustCenterProps {
   user: UserProfile | null;
@@ -67,6 +68,40 @@ export const TrustCenter: React.FC<TrustCenterProps> = ({
 
   return (
     <div className="space-y-8 pb-12">
+      {/* High-Tech National Cyber Defense Telemetry Strip */}
+      <div className="bg-[#050b17] border border-cyan-500/30 rounded-2xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-400 flex items-center justify-center text-cyan-300">
+            <Radio className="w-4 h-4 animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                RWANDA CYBER DEFENSE POSTURE:
+              </span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
+                ACTIVE DEFENSE (DEFCON 4)
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 font-mono">
+              National CERT & NCSA Telemetry • 14,892 Ingress Threats Neutralized Today
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
+          <div className="hidden sm:block text-right">
+            <span className="text-[10px] text-slate-400 uppercase block">Telecom Grid Status</span>
+            <span className="text-emerald-400 font-bold">100% SECURE (30/30 DISTS)</span>
+          </div>
+          <div className="h-6 w-px bg-slate-800 hidden sm:block" />
+          <div className="text-right">
+            <span className="text-[10px] text-slate-400 uppercase block">Emergency Dispatch</span>
+            <span className="text-cyan-300 font-bold">RIB 166 • RNP 112</span>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Security Posture Section with Cyber Command Visual Accent */}
       <div className="relative rounded-2xl overflow-hidden border border-cyan-900/60 bg-gradient-to-r from-[#070d1a] via-[#091428] to-[#060c18] shadow-2xl p-6 sm:p-8">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -212,6 +247,13 @@ export const TrustCenter: React.FC<TrustCenterProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Real-Time Cyber Threat Map for Rwanda */}
+      <CyberThreatMap
+        language={language}
+        onExploreReport={onOpenReport}
+        onExploreScanner={onOpenScanner}
+      />
 
       {/* 4 Pillars of Defense Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

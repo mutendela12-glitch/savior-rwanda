@@ -253,11 +253,11 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
             <div className="flex items-center gap-2">
               <Crosshair className="w-4 h-4 text-rose-400" />
               <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-                Live GPS Suspect Triangulation & Intercept Radar
+                {t.policeGpsRadarSectionTitle}
               </h2>
             </div>
             <span className="text-[11px] text-cyan-400 font-mono">
-              Tracking Suspect on Case: <strong className="text-white">{selectedReport.trackingId}</strong>
+              {t.policeTrackingSuspectOnCase} <strong className="text-white">{selectedReport.trackingId}</strong>
             </span>
           </div>
 
@@ -277,8 +277,8 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
         <div className="lg:col-span-5 bg-[#0b1324] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
-              <h3 className="text-sm font-bold text-white">Incoming Case Dockets ({filteredReports.length})</h3>
-              <p className="text-[10px] text-slate-400">Reports filed by citizens across Rwanda</p>
+              <h3 className="text-sm font-bold text-white">{t.policeIncomingDocketsTitle} ({filteredReports.length})</h3>
+              <p className="text-[10px] text-slate-400">{t.policeDocketsFiledByCitizens}</p>
             </div>
             <button
               onClick={onRefreshData}
@@ -607,12 +607,12 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
               {/* Officer Decision Form & Chain of Custody */}
               <form onSubmit={handleUpdateCase} className="p-4 bg-[#070d18] border border-cyan-900/50 rounded-xl space-y-3">
                 <h4 className="text-xs font-bold text-white uppercase font-mono tracking-wider">
-                  Investigator Official Decision & Docket Update
+                  {t.policeOfficerDecisionTitle}
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[11px] text-slate-300 font-mono">Duty Officer in Charge:</label>
+                    <label className="text-[11px] text-slate-300 font-mono">{t.policeDutyOfficerLabel}</label>
                     <input
                       type="text"
                       value={officerName}
@@ -622,7 +622,7 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] text-slate-300 font-mono">Status Transition:</label>
+                    <label className="text-[11px] text-slate-300 font-mono">{t.policeStatusTransitionLabel}</label>
                     <select
                       value={statusUpdate}
                       onChange={(e) => setStatusUpdate(e.target.value as any)}
@@ -638,7 +638,7 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300 font-mono">Officer Case Observation (Appended to Audit Trail):</label>
+                  <label className="text-[11px] text-slate-300 font-mono">{t.policeOfficerNotesLabel}</label>
                   <textarea
                     rows={2}
                     value={investigatorNote}
@@ -654,7 +654,7 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
                   className="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-50 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-950"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>Update Docket & Sign Chain of Custody</span>
+                  <span>{t.policeBtnUpdateDocket}</span>
                 </button>
               </form>
 
@@ -664,7 +664,7 @@ export const OfficialCommandPortal: React.FC<OfficialCommandPortalProps> = ({
                   <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
                     <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                      IMMUTABLE CHAIN OF CUSTODY (NPPA / COURT ADMISSIBLE)
+                      {t.policeChainOfCustodyTitle}
                     </span>
                     <span className="text-[10px] text-slate-500">{selectedReport.chainOfCustodyAudit.length} Entries</span>
                   </div>

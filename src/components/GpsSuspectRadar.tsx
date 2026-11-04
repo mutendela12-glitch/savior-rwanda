@@ -18,6 +18,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { CybercrimeReport, LanguageCode } from '../types';
+import { translations } from '../translations';
 
 interface GpsSuspectRadarProps {
   report: CybercrimeReport;
@@ -34,6 +35,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
   onRefreshTelemetry,
   isActionLoading = false,
 }) => {
+  const t = translations[language];
   const [zoomLevel, setZoomLevel] = useState<'KIGALI' | 'MICRO' | 'RWANDA'>('MICRO');
   const [mapStyle, setMapStyle] = useState<'TACTICAL_DARK' | 'SATELLITE_GRID'>('TACTICAL_DARK');
   const [isPinging, setIsPinging] = useState(false);
@@ -376,7 +378,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
             title="Instant simulated freeze of suspect MTN & Airtel MoMo wallet to prevent fund cash-out"
           >
             <ShieldAlert className="w-4 h-4 text-amber-400 mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase">Freeze MoMo</span>
+            <span className="text-[10px] font-bold uppercase">{t.policeBtnFreezeMoMo}</span>
             <span className="text-[9px] text-amber-400/80">MTN & Airtel API</span>
           </button>
 
@@ -388,7 +390,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
             title="Issue National Bank of Rwanda (BNR) provisional preservation order across banks"
           >
             <Zap className="w-4 h-4 text-blue-400 mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase">Freeze Bank</span>
+            <span className="text-[10px] font-bold uppercase">{t.policeBtnFreezeBank}</span>
             <span className="text-[9px] text-blue-400/80">BNR Interbank</span>
           </button>
 
@@ -400,7 +402,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
             title="Enforce cellular BTS tower lock and continuous GPS tracking"
           >
             <Radio className="w-4 h-4 text-cyan-400 mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase">IMSI Lock</span>
+            <span className="text-[10px] font-bold uppercase">{t.policeBtnImsiLock}</span>
             <span className="text-[9px] text-cyan-400/80">Tower Radius</span>
           </button>
 
@@ -412,7 +414,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
             title="Dispatch nearest RNP patrol squad or rapid motorcycle to suspect GPS location"
           >
             <Car className="w-4 h-4 text-indigo-400 mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase">Dispatch Patrol</span>
+            <span className="text-[10px] font-bold uppercase">{t.policeBtnDispatchPatrol}</span>
             <span className="text-[9px] text-indigo-400/80">RNP Squad (2m)</span>
           </button>
 
@@ -424,7 +426,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
             title="Generate expedited digital arrest warrant signed by RIB prosecutor"
           >
             <Layers className="w-4 h-4 text-purple-400 mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase">RIB Warrant</span>
+            <span className="text-[10px] font-bold uppercase">{t.policeBtnExpediteWarrant}</span>
             <span className="text-[9px] text-purple-400/80">Digital Signature</span>
           </button>
 
@@ -436,7 +438,7 @@ export const GpsSuspectRadar: React.FC<GpsSuspectRadarProps> = ({
             title="Mark case as solved: suspect intercepted, stolen funds secured, and citizen notified"
           >
             <Zap className="w-4 h-4 text-emerald-400 mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase text-white">Solve Case</span>
+            <span className="text-[10px] font-bold uppercase text-white">{t.policeBtnResolveFast}</span>
             <span className="text-[9px] text-emerald-300">Close & Notify</span>
           </button>
         </div>

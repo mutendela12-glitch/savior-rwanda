@@ -145,7 +145,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
           }`}
         >
           <MessageSquare className="w-3.5 h-3.5" />
-          <span>Inspect SMS / WhatsApp Message</span>
+          <span>{t.scannerInspectMsgTab}</span>
         </button>
 
         <button
@@ -155,7 +155,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
           }`}
         >
           <LinkIcon className="w-3.5 h-3.5" />
-          <span>Inspect Suspicious URL</span>
+          <span>{t.scannerInspectUrlTab}</span>
         </button>
       </div>
 
@@ -164,8 +164,8 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
         {scanType === 'MESSAGE' ? (
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-300 flex items-center justify-between">
-              <span>Paste message body (SMS, WhatsApp, Email, or MoMo SMS notification):</span>
-              <span className="text-[10px] text-cyan-400 font-mono">Kinyarwanda & English Supported</span>
+              <span>{t.scannerPasteMsgLabel}</span>
+              <span className="text-[10px] text-cyan-400 font-mono">{t.scannerLanguagesSupported}</span>
             </label>
             <textarea
               rows={4}
@@ -178,7 +178,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
         ) : (
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-300">
-              Enter suspicious link or domain name:
+              {t.scannerEnterUrlLabel}
             </label>
             <input
               type="text"
@@ -199,7 +199,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
         {/* Action Button & Sample Triggers */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] text-slate-400 font-mono">Quick test samples:</span>
+            <span className="text-[10px] text-slate-400 font-mono">{t.scannerQuickSamples}</span>
             {sampleMessages.map((sample, i) => (
               <button
                 key={i}
@@ -267,7 +267,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
           {/* Explanation */}
           <div className="space-y-1.5">
             <h4 className="text-xs font-bold text-slate-200 uppercase font-mono tracking-wider">
-              Forensic AI Analysis:
+              {t.scannerForensicTitle}
             </h4>
             <p className="text-xs text-slate-300 leading-relaxed bg-[#070d18] border border-slate-800 rounded-xl p-4">
               {scanResult.analysisExplanation}
@@ -279,7 +279,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
             <div className="p-4 bg-[#070d18] border border-slate-800 rounded-xl space-y-2">
               <span className="text-xs font-bold text-rose-300 font-mono flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
-                <span>Detected Red Flags / Indicators:</span>
+                <span>{t.scannerRedFlags}</span>
               </span>
               <ul className="list-disc list-inside space-y-1 text-xs text-slate-300">
                 {scanResult.warningSigns.map((sign, idx) => (
@@ -291,7 +291,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
             <div className="p-4 bg-[#070d18] border border-slate-800 rounded-xl space-y-2">
               <span className="text-xs font-bold text-emerald-300 font-mono flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Recommended Protective Action:</span>
+                <span>{t.scannerGuidance}</span>
               </span>
               <ul className="list-disc list-inside space-y-1 text-xs text-slate-300">
                 {scanResult.actionGuidance.map((act, idx) => (
@@ -318,7 +318,7 @@ export const ScamScanner: React.FC<ScamScannerProps> = ({
               className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap shadow-lg shadow-rose-950 flex items-center gap-1.5"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>Report to RIB / Police</span>
+              <span>{t.scannerBtnReportPolice}</span>
             </button>
           </div>
         </div>

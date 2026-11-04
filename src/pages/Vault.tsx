@@ -155,14 +155,14 @@ export const Vault: React.FC<VaultProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-white">
-                  SAVIOR Secure Vault
+                  {t.vaultTitle}
                 </h1>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700">
                   AES-256 ENCRYPTED
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-mono">
-                Identity, Biometric Templates, Financial Simulators & Evidence Repository
+                {t.vaultBannerSubtitle}
               </p>
             </div>
           </div>
@@ -224,7 +224,7 @@ export const Vault: React.FC<VaultProps> = ({
         <div className="bg-[#0b1324] border border-slate-800 rounded-2xl p-6 space-y-6">
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
-              <h3 className="text-base font-bold text-white">Personal Identity & Residency</h3>
+              <h3 className="text-base font-bold text-white">{t.vaultProfile}</h3>
               <p className="text-xs text-slate-400">Cryptographically bound citizen profile</p>
             </div>
             <span className="text-xs font-mono px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
@@ -234,32 +234,32 @@ export const Vault: React.FC<VaultProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="p-3.5 bg-[#070d18] border border-slate-800 rounded-xl space-y-1">
-              <span className="text-[10px] text-slate-500 font-mono block">FULL LEGAL NAME</span>
+              <span className="text-[10px] text-slate-500 font-mono block">{t.vaultProfileLegalName}</span>
               <span className="text-sm font-semibold text-white">{user.fullName}</span>
             </div>
 
             <div className="p-3.5 bg-[#070d18] border border-slate-800 rounded-xl space-y-1">
-              <span className="text-[10px] text-slate-500 font-mono block">NATIONAL ID (NIDA MASKED)</span>
+              <span className="text-[10px] text-slate-500 font-mono block">{t.vaultProfileNationalId}</span>
               <span className="text-sm font-mono text-cyan-300">{user.nationalIdMasked}</span>
             </div>
 
             <div className="p-3.5 bg-[#070d18] border border-slate-800 rounded-xl space-y-1">
-              <span className="text-[10px] text-slate-500 font-mono block">TELEPHONE (MOMO BOUND)</span>
+              <span className="text-[10px] text-slate-500 font-mono block">{t.vaultProfilePhone}</span>
               <span className="text-sm font-mono text-white">{user.phone}</span>
             </div>
 
             <div className="p-3.5 bg-[#070d18] border border-slate-800 rounded-xl space-y-1">
-              <span className="text-[10px] text-slate-500 font-mono block">EMAIL ADDRESS</span>
+              <span className="text-[10px] text-slate-500 font-mono block">{t.vaultProfileEmail}</span>
               <span className="text-sm font-mono text-white">{user.email}</span>
             </div>
 
             <div className="p-3.5 bg-[#070d18] border border-slate-800 rounded-xl space-y-1">
-              <span className="text-[10px] text-slate-500 font-mono block">RESIDENCE / DISTRICT</span>
+              <span className="text-[10px] text-slate-500 font-mono block">{t.vaultProfileResidence}</span>
               <span className="text-sm text-white">{user.district}, {user.province}</span>
             </div>
 
             <div className="p-3.5 bg-[#070d18] border border-slate-800 rounded-xl space-y-1">
-              <span className="text-[10px] text-slate-500 font-mono block">ACCOUNT STATUS</span>
+              <span className="text-[10px] text-slate-500 font-mono block">{t.vaultProfileStatus}</span>
               <span className="text-sm font-bold text-emerald-400">ACTIVE DEFENSE (UNLOCKED)</span>
             </div>
           </div>

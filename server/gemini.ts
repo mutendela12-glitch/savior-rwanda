@@ -44,7 +44,7 @@ Output ONLY a valid JSON object without any Markdown formatting or code block wr
 }`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-3.8-flash',
         contents: prompt,
       });
 
@@ -93,7 +93,7 @@ Return strictly valid JSON:
 }`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-3.8-flash',
         contents: prompt,
       });
 
@@ -129,7 +129,7 @@ User Context: ${JSON.stringify(context || {})}
 Keep your response structured, actionable, and reassuring. Always highlight that SAVIOR is a defensive simulator and never ask for actual secret PINs or passwords. For real-world police emergencies, advise calling Rwanda National Police (112) or Rwanda Investigation Bureau (166).`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-3.8-flash',
         contents: prompt,
       });
 
@@ -322,7 +322,7 @@ Return strictly valid JSON without markdown formatting:
 }`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.8-flash',
         contents: [
           {
             role: 'user',

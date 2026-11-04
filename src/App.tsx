@@ -12,6 +12,7 @@ import { CybercrimeReporting } from './pages/CybercrimeReporting';
 import { OfficialCommandPortal } from './pages/OfficialCommandPortal';
 import { AdminSOC } from './pages/AdminSOC';
 import { SaviorAIChat } from './pages/SaviorAIChat';
+import { SaviorAiHudAssistant } from './components/SaviorAiHudAssistant';
 import { AuthScreen } from './components/AuthScreen';
 import cyberBg from './assets/images/cyber_defense_bg.jpg';
 import { 
@@ -349,6 +350,13 @@ export function App() {
           />
         )}
       </main>
+
+      {/* Floating Futuristic SAVIOR AI Security Copilot HUD */}
+      <SaviorAiHudAssistant
+        language={language}
+        onNavigateTab={(tab) => setCurrentTab(tab)}
+        onOpenEmergencyLock={() => setIsEmergencyLockOpen(true)}
+      />
 
       {/* Global Modals */}
       <EmergencyLockModal

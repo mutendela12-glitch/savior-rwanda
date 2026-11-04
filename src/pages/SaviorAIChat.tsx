@@ -217,7 +217,7 @@ export const SaviorAIChat: React.FC<SaviorAIChatProps> = ({ language }) => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={language === 'rw' ? 'Andika ikibazo cyangwa impungenge zawe hano...' : 'Ask Savior AI about cyber threats, MoMo scams, or security guidance...'}
+              placeholder={t.aiInputPlaceholder}
               className="flex-1 bg-[#070d18] border border-slate-700 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
             />
             <button
@@ -226,7 +226,7 @@ export const SaviorAIChat: React.FC<SaviorAIChatProps> = ({ language }) => {
               className="px-5 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-lg shadow-cyan-950 flex items-center gap-1.5"
             >
               <Send className="w-4 h-4" />
-              <span className="hidden sm:inline">Ask</span>
+              <span className="hidden sm:inline">{t.aiSendBtn}</span>
             </button>
           </form>
         </div>

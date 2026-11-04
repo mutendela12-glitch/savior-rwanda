@@ -659,11 +659,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                       </span>
                       <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                         <KeyRound className="w-4 h-4 text-cyan-400" />
-                        <span>
-                          {language === 'rw' 
-                            ? 'Amakuru Bwite Cyangwa Konti Zinjiriwe n’Uko Byagenze' 
-                            : 'Compromised Information & Account Hijacking Inquiry'}
-                        </span>
+                        <span>{t.reportQ2InfoTitle}</span>
                       </h3>
                     </div>
 
@@ -671,9 +667,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                       {/* Checkboxes: Which items compromised */}
                       <div className="space-y-2">
                         <label className="text-xs font-medium text-slate-300 block">
-                          {language === 'rw' 
-                            ? 'Ni ibihe bintu byawe byibwe cyangwa byinjiriwe? (Hitamo ibyabaye):' 
-                            : 'Which accounts or personal data were stolen or hijacked? (Select all that apply):'}
+                          {t.reportQ2InfoCheckboxesLabel}
                         </label>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -709,7 +703,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                       {/* How information was stolen */}
                       <div className="space-y-1.5">
                         <label className="text-xs font-medium text-slate-300">
-                          {language === 'rw' ? 'Umujura yabonye ate amakuru yawe?' : 'How did the thief obtain or compromise your information?'}
+                          {t.reportQ2InfoMethodLabel}
                         </label>
                         <select
                           value={infoTheftMethod}
@@ -742,7 +736,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                         <div className="flex items-center justify-between">
                           <label className="text-xs font-bold text-rose-300 flex items-center gap-2">
                             <AlertOctagon className="w-4 h-4 text-rose-400 animate-pulse" />
-                            <span>Is the hacker currently messaging your contacts or asking for money?</span>
+                            <span>{t.reportQ2ActiveImpersonationLabel}</span>
                           </label>
                           <div className="flex items-center gap-2">
                             <button
@@ -754,7 +748,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                                   : 'bg-slate-800 text-slate-400'
                               }`}
                             >
-                              YES (URGENT)
+                              {t.reportQ2ImpersonationYes}
                             </button>
                             <button
                               type="button"
@@ -765,7 +759,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                                   : 'bg-slate-800 text-slate-400'
                               }`}
                             >
-                              NO / UNSURE
+                              {t.reportQ2ImpersonationNo}
                             </button>
                           </div>
                         </div>
@@ -773,7 +767,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                         {isOngoingImpersonation && (
                           <div className="space-y-1.5 pt-2 border-t border-rose-900/60">
                             <label className="text-[11px] text-rose-200">
-                              Contacts, WhatsApp groups, or phone numbers at immediate risk:
+                              {t.reportQ2ContactsAtRiskLabel}
                             </label>
                             <input
                               type="text"
@@ -797,14 +791,14 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                     </span>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                       <UserX className="w-4 h-4 text-amber-400" />
-                      <span>{language === 'rw' ? 'Umwirondoro w’Ukekwa (Umujura)' : 'Suspect Profile & Contact Channels'}</span>
+                      <span>{t.reportQ3SuspectTitle}</span>
                     </h3>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-0 sm:ml-8">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-300">
-                        Suspect Phone Number / WhatsApp / Caller ID:
+                        {t.reportQ3SuspectContactLabel}
                       </label>
                       <input
                         type="text"
@@ -818,7 +812,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
 
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-300">
-                        Fake Name, Alias, or Authority Claimed:
+                        {t.reportQ3SuspectAliasLabel}
                       </label>
                       <input
                         type="text"
@@ -830,7 +824,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-300">Platform Used by Suspect:</label>
+                      <label className="text-xs font-medium text-slate-300">{t.reportQ3PlatformLabel}</label>
                       <select
                         value={suspectPlatform}
                         onChange={(e) => setSuspectPlatform(e.target.value)}
@@ -846,7 +840,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-300">Language / Accent Spoken:</label>
+                      <label className="text-xs font-medium text-slate-300">{t.reportQ3LanguageLabel}</label>
                       <select
                         value={suspectLanguage}
                         onChange={(e) => setSuspectLanguage(e.target.value)}
@@ -871,7 +865,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                       </span>
                       <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-rose-400" />
-                        <span>Incident Location in Rwanda (for Police Patrol Intercept)</span>
+                        <span>{t.reportQ4LocationTitle}</span>
                       </h3>
                     </div>
 
@@ -882,7 +876,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                       className="px-3 py-1 bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/50 text-cyan-300 rounded-lg text-xs font-mono flex items-center gap-1.5 transition"
                     >
                       <MapPin className="w-3.5 h-3.5" />
-                      <span>{isDetectingGps ? 'Detecting GPS...' : 'Detect My GPS'}</span>
+                      <span>{isDetectingGps ? t.reportQ4DetectingGps : t.reportQ4DetectGpsBtn}</span>
                     </button>
                   </div>
 
@@ -943,7 +937,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                   <div className="ml-0 sm:ml-8 space-y-4">
                     {/* Narrative Title & Description */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-300">Case Title Summary:</label>
+                      <label className="text-xs font-medium text-slate-300">{t.reportQ5CaseTitleLabel}</label>
                       <input
                         type="text"
                         value={title}
@@ -954,7 +948,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-300">Detailed Sequence of Events:</label>
+                      <label className="text-xs font-medium text-slate-300">{t.reportQ5TimelineLabel}</label>
                       <textarea
                         rows={3}
                         value={description}
@@ -967,7 +961,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
 
                     {/* Evidence Attachment */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-300">Screenshot / SMS Export Attachment:</label>
+                      <label className="text-xs font-medium text-slate-300">{t.reportQ5AttachmentLabel}</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
@@ -1053,8 +1047,8 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
                   <PhoneCall className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white">Rwanda Cyber Emergency Hotlines</h4>
-                  <p className="text-[11px] text-slate-400">Toll-free 24/7 direct intervention</p>
+                  <h4 className="text-sm font-bold text-white">{t.reportHelplineTitle}</h4>
+                  <p className="text-[11px] text-slate-400">{t.reportHelplineDesc}</p>
                 </div>
               </div>
 
@@ -1082,7 +1076,7 @@ export const CybercrimeReporting: React.FC<CybercrimeReportingProps> = ({
             <div className="bg-[#0b1324] border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-cyan-400" />
-                <span>What to do IMMEDIATELY:</span>
+                <span>{t.reportImmediateStepsTitle}</span>
               </h4>
 
               <div className="space-y-2.5 text-xs text-slate-300">
