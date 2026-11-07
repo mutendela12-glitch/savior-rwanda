@@ -17,6 +17,7 @@ export interface UserProfile {
   hasStrongPassword: boolean;
   isAccountLocked: boolean;
   lockedAt?: string;
+  lockReason?: string;
   accountProtectionMode: boolean;
   createdAt: string;
 }
@@ -204,9 +205,15 @@ export interface CybercrimeReport {
   }>;
 }
 
+export interface ThreatMarker {
+  category: string;
+  description: string;
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+}
+
 export interface ThreatScanResult {
   scanId: string;
-  scanType: 'MESSAGE' | 'URL' | 'FILE';
+  scanType: 'MESSAGE' | 'URL' | 'FILE' | 'IMAGE';
   inputSample: string;
   threatLevel: 'SAFE' | 'LOW' | 'SUSPICIOUS' | 'HIGH' | 'CRITICAL';
   confidenceScore: number; // 0 to 100
@@ -218,6 +225,12 @@ export interface ThreatScanResult {
   actionGuidance: string[];
   officialWarningNotes?: string;
   scannedAt: string;
+  extractedText?: string;
+  extractedContacts?: string[];
+  extractedUrls?: string[];
+  extractedAmounts?: string[];
+  threatMarkers?: ThreatMarker[];
+  screenshotPreview?: string;
 }
 
 export interface SecurityAlert {

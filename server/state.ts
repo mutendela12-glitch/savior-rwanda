@@ -10,6 +10,8 @@ import {
   ActiveSession,
   RwandaThreatMapDistrict
 } from '../src/types';
+import { supabaseRepo } from './supabaseRepo';
+import { isSupabaseConfigured, checkSupabaseHealth } from './supabase';
 
 export class SaviorStateManager {
   private user: UserProfile = {
@@ -1054,9 +1056,11 @@ export class SaviorStateManager {
     priority?: CybercrimeReport['priority'];
     incidentLocation?: { lat: number; lng: number; district: string; sector?: string; address?: string };
   }): CybercrimeReport {
-    const trackingId = 'SAV-2026-' + Math.floor(100000 + Math.random() * 900000);
-    const reportId = 'REP-' + Math.floor(1000 + Math.random() * 9000);
-    const ribCaseNumber = 'RIB-CYBER-2026-' + Math.floor(10000 + Math.random() * 90000);
+    const chunk1 = crypto.randomBytes(2).toString('hex').toUpperCase();
+    const chunk2 = crypto.randomBytes(2).toString('hex').toUpperCase();
+    const trackingId = `SAV-2026-${chunk1}-${chunk2}`;
+    const reportId = 'REP-' + crypto.randomBytes(3).toString('hex').toUpperCase();
+    const ribCaseNumber = 'SAV-INTAKE-2026-' + crypto.randomBytes(2).toString('hex').toUpperCase();
     const now = new Date().toISOString();
 
     const evidenceHash = payload.evidenceFileContent 
@@ -1080,8 +1084,8 @@ export class SaviorStateManager {
       initialFastActions.push({
         actionType: 'FREEZE_MOMO',
         timestamp: now,
-        officer: 'Automated Gateway (RIB Cyber Dispatch)',
-        details: 'Urgent citizen request: Automated MoMo wallet debit freeze notice dispatched to telecom provider.',
+        officer: 'Automated Gateway (SAVIOR Verification Dispatch)',
+        details: 'Citizen requested emergency MoMo wallet debit freeze notice dispatched to telecom operator queue.',
         referenceTicket: 'TEL-AUTO-FREEZE-' + Math.floor(1000 + Math.random() * 9000),
       });
     }
@@ -1139,14 +1143,14 @@ export class SaviorStateManager {
         sector: pickedDistrict.sector,
       },
       fastActionsTaken: initialFastActions,
-      status: 'ESCALATED_RIB',
+      status: 'RECEIVED',
       priority: calculatedPriority,
       createdAt: now,
       updatedAt: now,
       reporterContactMasked: this.user.phone.replace(/(\+\d{3}\s\d{3})\s\d{3}\s(\d{3})/, '$1 ••• $2'),
-      assignedUnit: 'Rwanda Investigation Bureau (RIB) & RNP Cyber Response Squad',
+      assignedUnit: 'SAVIOR Intake & Verification Queue',
       investigatorNotes: [
-        `Case docket opened automatically upon citizen report receipt. Docket: ${ribCaseNumber}. Assigned to duty cybercrime investigators.`
+        `Case docket opened in SAVIOR intake queue. Tracking Ref: ${trackingId}. Awaiting investigator review.`
       ],
       chainOfCustodyAudit: [
         {
@@ -1157,8 +1161,8 @@ export class SaviorStateManager {
         },
         {
           timestamp: now,
-          actor: 'SAVIOR Law Enforcement Relay',
-          action: `Transmitted directly to Police & RIB Central Command. Case docket ${ribCaseNumber} assigned.`,
+          actor: 'SAVIOR Secure Relay',
+          action: `Dossier cryptographically locked in verification intake queue.`,
           integrityHash: crypto.createHash('sha256').update(`${ribCaseNumber}-${now}`).digest('hex'),
         }
       ]
@@ -1175,6 +1179,23 @@ export class SaviorStateManager {
       isRead: false,
       category: 'VAULT'
     });
+
+    // Asynchronously persist to Supabase PostgreSQL if configured
+    if (isSupabaseConfigured()) {
+      supabaseRepo.insertReport(newReport).catch(err => {
+        console.warn('Supabase async insertReport warning:', err);
+      });
+      supabaseRepo.recordAuditLog({
+        actorEmail: this.user.email,
+        actorRole: this.user.role,
+        action: 'SUBMIT_CYBERCRIME_REPORT',
+        targetResource: 'cybercrime_reports',
+        targetId: trackingId,
+        payload: { category: payload.category, amount: effectiveLoss, trackingId },
+      }).catch(err => {
+        console.warn('Supabase audit log write warning:', err);
+      });
+    }
 
     return newReport;
   }
@@ -1202,6 +1223,20 @@ export class SaviorStateManager {
       action: `Status updated to ${status}. Note logged: "${note.substring(0, 60)}..."`,
       integrityHash: crypto.createHash('sha256').update(`${rep.trackingId}-${status}-${Date.now()}`).digest('hex'),
     });
+
+    if (isSupabaseConfigured()) {
+      supabaseRepo.updateReport(rep).catch(err => {
+        console.warn('Supabase async updateReport warning:', err);
+      });
+      supabaseRepo.recordAuditLog({
+        actorEmail: this.user.email,
+        actorRole: this.user.role,
+        action: 'UPDATE_REPORT_STATUS',
+        targetResource: 'cybercrime_reports',
+        targetId: rep.trackingId,
+        payload: { status, note, officerName },
+      }).catch(err => console.warn('Supabase audit log write warning:', err));
+    }
 
     return rep;
   }
@@ -1308,6 +1343,20 @@ export class SaviorStateManager {
       category: 'VAULT'
     });
 
+    if (isSupabaseConfigured()) {
+      supabaseRepo.updateReport(rep).catch(err => {
+        console.warn('Supabase async updateReport warning:', err);
+      });
+      supabaseRepo.recordAuditLog({
+        actorEmail: this.user.email,
+        actorRole: this.user.role,
+        action: `FAST_ACTION_${actionType}`,
+        targetResource: 'cybercrime_reports',
+        targetId: rep.trackingId,
+        payload: { actionType, officerName, ticketId, details: actionDetails },
+      }).catch(err => console.warn('Supabase audit log write warning:', err));
+    }
+
     return rep;
   }
 
@@ -1360,6 +1409,64 @@ export class SaviorStateManager {
       liveGpsTracked,
       avgResolutionTimeMinutes: 18.4,
       interceptSuccessRatePercent: 96.8
+    };
+  }
+
+  /**
+   * Initializes real-time synchronization with Supabase PostgreSQL if configured
+   */
+  public async initDatabaseSync(): Promise<{ configured: boolean; synced: boolean; error?: string }> {
+    if (!isSupabaseConfigured()) {
+      return { configured: false, synced: false };
+    }
+
+    try {
+      // First verify that Supabase is reachable and database schema tables exist
+      const health = await checkSupabaseHealth();
+      if (!health.connected || !health.schemaInitialized) {
+        console.log('[SAVIOR Database] Supabase project connected. Schema tables pending migration in Supabase SQL editor. Operating in in-memory fallback mode.');
+        return { configured: true, synced: false, error: health.error };
+      }
+
+      // 1. Sync reports
+      const reportsRes = await supabaseRepo.fetchReports();
+      if (reportsRes.success && reportsRes.data && reportsRes.data.length > 0) {
+        this.reports = reportsRes.data;
+        console.log(`[Supabase] Synchronized ${reportsRes.data.length} reports from PostgreSQL database.`);
+      }
+
+      // 2. Sync alerts
+      const alertsRes = await supabaseRepo.fetchAlerts();
+      if (alertsRes.success && alertsRes.data && alertsRes.data.length > 0) {
+        this.alerts = alertsRes.data;
+      }
+
+      // 3. Record server startup audit log
+      await supabaseRepo.recordAuditLog({
+        action: 'SERVER_STARTUP_SYNC',
+        targetResource: 'system',
+        payload: { timestamp: new Date().toISOString() },
+      });
+
+      return { configured: true, synced: true };
+    } catch (err: any) {
+      return { configured: true, synced: false, error: err.message };
+    }
+  }
+
+  /**
+   * Returns complete diagnostics of the persistent storage tier
+   */
+  public async getDatabaseDiagnostics() {
+    const isConfigured = isSupabaseConfigured();
+    const health = await checkSupabaseHealth();
+    return {
+      provider: isConfigured && health.connected ? 'SUPABASE_POSTGRESQL' : 'IN_MEMORY_FALLBACK',
+      isConfigured,
+      health,
+      activeReportsCount: this.reports.length,
+      alertsCount: this.alerts.length,
+      timestamp: new Date().toISOString(),
     };
   }
 }
